@@ -108,7 +108,6 @@ def recompute_d_matrix(dMtx, bestPair):
 		d_ij = dMtx[bestPair[0]][bestPair[1]] if isfinite(dMtx[bestPair[0]][bestPair[1]]) else dMtx[bestPair[1]][bestPair[0]]
 		
 		newMtx[i][bestPair[1]] = (d_ik + d_jk - d_ij) / 2
-		#print "correcting column %d, in row %d with value %f  [d_idx was %d]" % (bestPair[1], i, newMtx[i][bestPair[1]], d_idx)
 	
 	# correct row
 	for j in range(0, bestPair[1]+1):
