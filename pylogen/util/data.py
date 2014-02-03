@@ -32,3 +32,25 @@ def import_mega_csv(csvPath):
 				break
 				
 	return (names, distMtx)
+
+def import_fasta_sequences(fastaSeqFile):
+	"""
+	Imports FASTA sequences
+	
+	Returns a list of lists
+	"""
+	fastaFile = open(fastaSeqFile)
+	data      = fastaFile.readlines()
+	sequences = []
+	names     = []
+	
+	for row in data:
+		if row[0] == '>':
+			# OTU name
+			name = ''.join([c for c in row[1:] if c not in ['\r', '\n']])
+			names.append(name)
+		else:
+			# OTU sequence (newline feeds included, remove them)
+			sequences.append([c for c in row if c not in ['\r', '\n']])
+			
+	return (names, sequences)

@@ -1,9 +1,18 @@
+"""
+ Implementation of Neighbors Joining method for building phylogenetic tree 
+
+ (c) 2014 Urban Soban <u.soban@gmail.com>
+ 
+ Contributors:
+	Primoz Turnsek <primoz.turnsek@gmail.com>
+"""
+
 from numpy                   import *
 from pylogen.tree            import Edge, NeighborJoiningNode
 from pylogen.util.data       import import_mega_csv
 from pylogen.util.mtx_search import find_min
 
-def neighbor_joining(matrixFilePath):
+def neighbor_joining(dMtx, names):
 
 	def compute_s_measure(dMtx):
 		"""
@@ -65,12 +74,11 @@ def neighbor_joining(matrixFilePath):
 			d_jk = dMtx[d_idx][bestPair[1]] if isfinite(dMtx[d_idx][bestPair[1]]) else dMtx[bestPair[1]][d_idx]
 			d_ij = dMtx[bestPair[0]][bestPair[1]] if isfinite(dMtx[bestPair[0]][bestPair[1]]) else dMtx[bestPair[1]][bestPair[0]]
 			
-			newMtx[bestPair[1]][j] = (d_ik + d_jk - d_ij) / 2
+			newMtx[bestPair[1]][j] = (d_ik + d_jk - d_ij) / 2.0
 		
 		return newMtx
 
-
-	names, dMtx = import_mega_csv(matrixFilePath)
+	# main loop
 	nodes = {}
 	root  = None
 
@@ -87,8 +95,8 @@ def neighbor_joining(matrixFilePath):
 			names in correct order, we remove the node name in max. index, 
 			and rename the node name in min. index to ancestor's name 
 			"""
-			matchNames      = (names[minPair[0]], names[minPair[1]])
-			ancestorName    = "[%s + %s]" % matchNames
+			matchNames        = (names[minPair[0]], names[minPair[1]])
+			ancestorName      = "[%s + %s]" % matchNames
 			names[minPair[1]] = ancestorName
 			names.pop(minPair[0]) 
 			
@@ -103,16 +111,16 @@ def neighbor_joining(matrixFilePath):
 			else:
 				fstNode = NeighborJoiningNode(matchNames[1])
 
-			d_ij    = dMtx[minPair[0]][minPair[1]]
-			s_i     = sMeasure[minPair[1]]
-			s_j     = sMeasure[minPair[0]]
+			d_ij = dMtx[minPair[0]][minPair[1]]
+			s_i  = sMeasure[minPair[1]]
+			s_j  = sMeasure[minPair[0]]
 			
-			fstEdge = Edge(commonAncestor, fstNode, 0.5*d_ij + 0.5 * (s_i - s_j))
-			sndEdge = Edge(commonAncestor, sndNode, 0.5*d_ij + 0.5 * (s_j - s_i))
+			fstEdge = Edge(commonAncestor, fstNode, 0.5 * d_ij + 0.5 * (s_i - s_j))
+			sndEdge = Edge(commonAncestor, sndNode, 0.5 * d_ij + 0.5 * (s_j - s_i))
+			
 			nodes[ancestorName] = commonAncestor
-			root = commonAncestor
-			
-			dMtx = recompute_d_matrix(dMtx, minPair)
+			root                = commonAncestor
+			dMtx                = recompute_d_matrix(dMtx, minPair)
 		else:
 			d              = dMtx[1][0]
 			matchNames     = (names[0], names[1])
@@ -129,8 +137,9 @@ def neighbor_joining(matrixFilePath):
 			else:
 				fstNode = NeighborJoiningNode(matchNames[1])
 			
-			f = Edge(commonAncestor, fstNode, d)
-			s = Edge(commonAncestor, sndNode, d)
+			Edge(commonAncestor, fstNode, d)
+			Edge(commonAncestor, sndNode, d)
+			
 			root = commonAncestor
 			break
 

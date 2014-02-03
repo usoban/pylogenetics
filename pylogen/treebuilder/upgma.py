@@ -13,7 +13,7 @@ from pylogen.tree            import Edge, UPGMANode
 from numpy                   import *
 import sys
 
-def upgma(matrixFilePath):
+def upgma(distMtx, names):
 	
 	def recompute_matrix(dimMtx, fst, snd):
 		"""
@@ -65,8 +65,7 @@ def upgma(matrixFilePath):
 			newMtxRowIdx = newMtxRowIdx + 1
 				 
 		return newMtx
-	
-	names, distMtx = import_mega_csv(matrixFilePath) 
+	 
 	nodes          = {}
 	root           = None
 
