@@ -1,1 +1,1 @@
-__all__= ["upgma"]
+__all__= ["upgma", "nj"]
