@@ -1,1 +1,1 @@
-__all__ = ["jukes_cantor"]
+__all__ = ["jukes_cantor", "kimura"]
