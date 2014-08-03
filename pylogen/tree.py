@@ -19,6 +19,16 @@ class Edge:
 	def setEndNode(self, node):
 		self.endNode = node
 		self.endNode.setParentEdge(self)
+		
+class UniEdge:
+	
+	def __init__(self, fst, snd, distance):
+		self.distance = distance
+		self.a = fst
+		self.b = snd
+		
+		fst.addChildEdge(self)
+		snd.addChildEdge(self)
 
 class Node:
 	"""
@@ -69,6 +79,13 @@ class NeighborJoiningNode(Node):
 		else:
 			return "%s:%f" % (self.label, self.parentEdge.distance)
 			
+	def xnet(self, G):
+		#if len(self.children) > 0:
+		for e in self.children:
+			G.add_edge(self.label, e.endNode.label, distance=e.distance)
+			print G.nodes()
+			e.endNode.xnet(G)
+			
 class UPGMANode(Node):
 	"""
 	UPGMA tree node
@@ -88,3 +105,28 @@ class UPGMANode(Node):
 				return '(%s):%f' % (childrenReps, self.parentEdge.distance - sharedDist)
 		else:
 			return "%s:%f" % (self.label, self.parentEdge.distance)
+		
+
+class MLNode(Node):
+	"""
+	Maximum likelihood leaf node
+	"""
+	
+	#def likelihood(base):
+		#for 
+	
+	def output(self):
+		return "NOT DEFINED"
+
+#class MLHiddenNode(Node):
+	#"""
+	#Maximum likelihood hidden node
+	#"""
+	
+	#def output(self):
+		#return "NOT DEFINED"
+
+#class Graph:
+	
+	#def __init__(self, vertexNames):
+		#self.mtx = 

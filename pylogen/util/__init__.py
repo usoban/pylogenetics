@@ -1,1 +1,1 @@
-__all__ = ["data", "mtx_search"]
+__all__ = ["data", "mtx_search", "visualize"]
